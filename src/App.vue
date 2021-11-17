@@ -8,7 +8,7 @@
 
             <input type="text" class="form-control" placeholder="Inserisci il nome del film..." v-model="filmCercato">
 
-            <button class="btn btn-primary" type="button" id="button-addon2">Cerca</button>
+            <button class="btn btn-primary" type="button" id="button-addon2" @click="queryRicerca">Cerca</button>
 
           </div>
         </div>
@@ -18,15 +18,19 @@
       <div class="row">
         <div class="col-md-12">
           <!-- Film -->
+          <h1>Film</h1>
           <ul>
             <li v-for="film in listaFilm" :key="film.id">
-              {{ film.title }}
+              {{ film.title }} - {{ film.original_title }} - {{ film.original_language }} - {{ film.vote_count }}
+              <hr>
             </li>
           </ul>
           <!-- Serie TV -->
+          <h1>Serie TV</h1>
           <ul>
             <li v-for="serieTv in listaSerieTv" :key="serieTv.id">
-              {{ serieTv.name }}
+              {{ serieTv.name }} - {{ serieTv.original_name }} - {{ serieTv.original_language }} - {{ serieTv.vote_count }}
+              <hr>
             </li>
           </ul>
         </div>
@@ -49,25 +53,45 @@ export default {
       filmCercato: "",
       listaFilm: [],
       listaSerieTv: [],
+      langFlags: {
+        en: "en.png",
+        it: "it.png",
+      },
     };
   },
   methods: {
-    queryRicerca(url, testoDaCercare, chiave){
-      axios.get(this.apiUrl + url, {
+    queryRicerca(){
+      this.queryRicercaFilm();
+      this.queryRicercaSerie();
+    },
+    queryRicercaFilm(){
+      axios.get(this.apiUrl + '/search/movie', {
       params: {
         api_key: this.apiKey,
-        query: testoDaCercare,
+        query: this.filmCercato,
         language: "it",
       }
       })
       .then(res => {
-        this[chiave] = res.data.results;
+        this.listaFilm = res.data.results;
+      });
+    },
+    queryRicercaSerie(){
+      axios.get(this.apiUrl + '/search/tv', {
+      params: {
+        api_key: this.apiKey,
+        query: this.filmCercato,
+        language: "it",
+      }
+      })
+      .then(res => {
+        this.listaSerieTv = res.data.results;
       });
     }
   },
   mounted(){
-    this.queryRicerca("/search/movie", this.filmCercato, "listaFilm");
-    this.queryRicerca("/search/tv", this.filmCercato, "listaSerieTv");
+    /* this.queryRicerca("/search/movie", "this.filmCercato", "listaFilm");
+    this.queryRicerca("/search/tv", "this.filmCercato", "listaSerieTv"); */
   }
 }
 </script>
