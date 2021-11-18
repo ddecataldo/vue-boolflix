@@ -21,6 +21,7 @@
           <h1>Film</h1>
           <ul>
             <li v-for="film in listaFilm" :key="film.id">
+              <img :src="generaThumb(film.poster_path)"> - 
               {{ film.title }} - 
               {{ film.original_title }} - 
               <img :src="getFlagPath(film.original_language)"> - 
@@ -32,6 +33,7 @@
           <h1>Serie TV</h1>
           <ul>
             <li v-for="serieTv in listaSerieTv" :key="serieTv.id">
+              <img :src="generaThumb(serieTv.poster_path)">
               {{ serieTv.name }} - 
               {{ serieTv.original_name }} - 
               <img :src="getFlagPath(serieTv.original_language)"> - 
@@ -56,6 +58,8 @@ export default {
     return {
       apiKey: "5d72883ce5a456a4913de11d19f67e70",
       apiUrl: "https://api.themoviedb.org/3",
+      imageUrl: "https://image.tmdb.org/t/p/",
+      sizeImage: "w342",
       filmCercato: "",
       listaFilm: [],
       listaSerieTv: [],
@@ -100,6 +104,13 @@ export default {
       }
 
       return require('@/assets/flags/' + this.lingua[lang]);
+    },
+    generaThumb(path){
+      if(!path){
+        return require('@/assets/placeholder.jpg');
+      }
+
+      return this.imageUrl + this.sizeImage + path;
     }
   },
   mounted(){
