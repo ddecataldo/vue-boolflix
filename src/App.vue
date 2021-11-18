@@ -21,7 +21,10 @@
           <h1>Film</h1>
           <ul>
             <li v-for="film in listaFilm" :key="film.id">
-              {{ film.title }} - {{ film.original_title }} - {{ film.original_language }} - {{ film.vote_count }}
+              {{ film.title }} - 
+              {{ film.original_title }} - 
+              <img :src="getFlagPath(film.original_language)"> - 
+              {{ film.vote_count }}
               <hr>
             </li>
           </ul>
@@ -29,7 +32,10 @@
           <h1>Serie TV</h1>
           <ul>
             <li v-for="serieTv in listaSerieTv" :key="serieTv.id">
-              {{ serieTv.name }} - {{ serieTv.original_name }} - {{ serieTv.original_language }} - {{ serieTv.vote_count }}
+              {{ serieTv.name }} - 
+              {{ serieTv.original_name }} - 
+              <img :src="getFlagPath(serieTv.original_language)"> - 
+              {{ serieTv.vote_count }}
               <hr>
             </li>
           </ul>
@@ -53,9 +59,9 @@ export default {
       filmCercato: "",
       listaFilm: [],
       listaSerieTv: [],
-      langFlags: {
-        en: "en.png",
-        it: "it.png",
+      lingua: {
+        en: "england.png",
+        it: "italy.png",
       },
     };
   },
@@ -87,6 +93,13 @@ export default {
       .then(res => {
         this.listaSerieTv = res.data.results;
       });
+    },
+    getFlagPath(lang){
+      if(!this.lingua[lang]){
+        return require('@/assets/flags/noflags.png');
+      }
+
+      return require('@/assets/flags/' + this.lingua[lang]);
     }
   },
   mounted(){
